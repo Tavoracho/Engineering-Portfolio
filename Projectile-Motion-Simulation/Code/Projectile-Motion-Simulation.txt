@@ -1,0 +1,111 @@
+In[1]:= Clear["Global`*"]
+
+(* Initial Conditions *)
+Subscript[Overscript[x, _], o] = 0;                    (*Initial x-position*)
+Subscript[Overscript[Overscript[x, _], .], o] = 6;                  (*Initial x-velocity*)
+Subscript[Overscript[y, _], o] = 18;                  (*Initial y-position*)
+Subscript[Overscript[Overscript[y, _], .], o] = 20;                  (*Initial y-velocity*)
+g = 9.81;                (*Acceleration due to gravity*)
+Subscript[\[Theta], o] = Pi/2;             (*Initial angle*)
+Subscript[Overscript[\[Theta], .], o] = .9*Pi;             (*Initial angular velocity,e.g.,rad/s*)
+L=20;
+
+
+(*COM Position Equations*)
+xposition[t_]:= Subscript[Overscript[Overscript[x, _], .], o] t+ Subscript[Overscript[x, _], o]
+yposition[t_]:=-(1/2)g*t^2 + Subscript[Overscript[Overscript[y, _], .], o] t+ Subscript[Overscript[y, _], o]
+\[Theta]position[t_]:= Subscript[Overscript[\[Theta], .], o] t+ Subscript[\[Theta], o]
+(*COM Velocity Equations*)
+xvelocity[t_]:=xposition'[t]
+yvelocity[t_]:=yposition'[t]
+\[Theta]velocity[t_]:=\[Theta]position'[t]
+(*COM Position Equations*)
+xaccel[t_]:=xposition''[t]
+yaccel[t_]:=yposition''[t]
+\[Theta]accel[t_]:=\[Theta]position''[t]
+
+(* Link Tip Coordinates*)
+Subscript[y, atip][t_]:=yposition[t] + (L/2)*Sin[\[Theta]position[t]]
+Subscript[y, btip][t_]:=yposition[t] - (L/2)*Sin[\[Theta]position[t]]
+Subscript[x, atip][t_]:=xposition[t] + (L/2)*Cos[\[Theta]position[t]]
+Subscript[x, btip][t_]:=xposition[t] - (L/2)*Cos[\[Theta]position[t]]
+In[37]:= (*---Find the Time of A Tip Impact---*)
+impactSolutionA=FindRoot[Subscript[y, atip][t]==0,{t,4}];
+impactTimeA=t/.impactSolutionA;
+impactPointA={Subscript[x, atip][impactTimeA],0};
+
+(*---Find the Time of B Tip Impact---*)
+impactSolutionB=FindRoot[Subscript[y, btip][t]==0,{t,4}];
+impactTimeB=t/.impactSolutionB;
+impactPointB={Subscript[x, btip][impactTimeB],0};
+
+
+(*------What Tip Hit First------*)
+If[impactTimeB>impactTimeA,
+{impactTimeFirst=impactTimeA, impactPointFirst = impactPointA,firstTip="A"},
+{impactTimeFirst=impactTimeB, impactPointFirst = impactPointB,firstTip="B"}
+];
+
+Print["Tip ",firstTip," hits the ground first at t = ",impactTimeB," seconds."];
+Print["Impact location: ",impactPointFirst];
+Print["Center of Mass Parameters: "];
+Print["COM Coordines: ",impactPointFirst];
+Print["Impact angle: ",\[Theta]position[impactTimeFirst]];
+Print["Impact Velocities: x-velocity: ", xvelocity[impactTimeFirst], " y-velocity: ",yvelocity[impactTimeFirst], " \[Theta]-velocity: ",\[Theta]velocity[impactTimeFirst]];
+
+(*------Animation------*)
+Manipulate[
+Graphics[
+{(*Objects to Draw*)
+
+(*1. The Trajectory of the Center of Mass*)
+{Dashed,Black,ParametricPlot[{xposition[tau],yposition[tau]},{tau,0,t},PlotStyle->Yellow][[1]]},
+
+(*2. The Link Itself*)
+{White,Thickness[0.012],
+Line[{{Subscript[x, atip][t],Subscript[y, atip][t]},{Subscript[x, btip][t],Subscript[y, btip][t]}}]},
+
+(*3. The Tips and COM points*)
+{PointSize[0.020],
+Green,Point[{Subscript[x, atip][t],Subscript[y, atip][t]}],Red,Point[{Subscript[x, btip][t],Subscript[y, btip][t]}],
+Black,Point[{xposition[t],yposition[t]}]},
+
+(*4. The Impact Markers (appears only after impact)*)
+If[t>=impactTimeFirst,
+If[firstTip=="A",
+{PointSize[0.015],Green,Point[impactPointFirst]},(*Use Green for Tip A*)
+{PointSize[0.015],Red,Point[impactPointFirst]}        (*Use Red for Tip B*)
+]
+]
+},
+
+(*Graphics Options*)
+PlotRange->{{0,65},{-20,75}},
+Axes->True,AxesLabel->{"x (m)","y (m)"},GridLines->Automatic,ImageSize->Medium,AspectRatio->Automatic
+],
+
+(*Animation Controls*)
+{{t,0,"Time (s)"},0,5.5,0.01,Animator}
+]
+
+
+During evaluation of In[37]:= Tip B hits the ground first at t = 4.44444 seconds.
+During evaluation of In[37]:= Impact location: {26.6667,0}
+During evaluation of In[37]:= Center of Mass Parameters: 
+During evaluation of In[37]:= COM Coordines: {26.6667,0}
+During evaluation of In[37]:= Impact angle: 14.1372
+During evaluation of In[37]:= Impact Velocities: x-velocity: 6 y-velocity: -23.6 \[Theta]-velocity: 2.82743
+Out[50]= Manipulate[Graphics[{{Dashed, Black, 
+     ParametricPlot[{xposition[tau], yposition[tau]}, {tau, 0, t}, 
+       PlotStyle -> Yellow][[1]]}, {White, Thickness[0.012], 
+     Line[{{Subscript[x, atip][t], Subscript[y, atip][t]}, 
+       {Subscript[x, btip][t], Subscript[y, btip][t]}}]}, 
+    {PointSize[0.02], Green, Point[{Subscript[x, atip][t], 
+       Subscript[y, atip][t]}], Red, Point[{Subscript[x, btip][t], 
+       Subscript[y, btip][t]}], Black, Point[{xposition[t], yposition[t]}]}, 
+    If[t >= impactTimeFirst, If[firstTip == "A", {PointSize[0.015], Green, 
+       Point[impactPointFirst]}, {PointSize[0.015], Red, 
+       Point[impactPointFirst]}]]}, PlotRange -> {{0, 65}, {-20, 75}}, 
+   Axes -> True, AxesLabel -> {"x (m)", "y (m)"}, GridLines -> Automatic, 
+   ImageSize -> Medium, AspectRatio -> Automatic], 
+  {{t, 2.18, "Time (s)"}, 0, 5.5, 0.01, ControlType -> Animator}]
