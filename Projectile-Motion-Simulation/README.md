@@ -177,13 +177,13 @@ using Mathematica's `FindRoot` numerical solver to obtain the impact time for ea
 ╠════════════════════════════════════════════════════╣
 ║  Impact Time:          t = 4.444 s                 ║
 ║  Impact Position:      x = 26.67 m                 ║
-║  Impact Angle:         θ = 14.14 rad ≈ 4.50π      ║
+║  Impact Angle:         θ = 14.14 rad ≈ 4.50π       ║
 ╠════════════════════════════════════════════════════╣
 ║  KINEMATIC STATE AT IMPACT                         ║
 ╠════════════════════════════════════════════════════╣
-║  Horizontal Velocity:  ẋ = 6.00 m/s     →         ║
-║  Vertical Velocity:    ẏ = -23.6 m/s    ↓         ║
-║  Angular Velocity:     θ̇ = 2.83 rad/s   ↻         ║
+║  Horizontal Velocity:  ẋ = 6.00 m/s     →          ║
+║  Vertical Velocity:    ẏ = -23.6 m/s    ↓          ║
+║  Angular Velocity:     θ̇ = 2.83 rad/s   ↻          ║
 ╚════════════════════════════════════════════════════╝
 ```
 
@@ -207,33 +207,6 @@ The simulation includes a **real-time interactive visualization** built with Mat
 ### Interactive Controls
 
 Time can be scrubbed interactively using an animator slider spanning `t ∈ [0, 5.5]` seconds with 0.01s resolution.
-
----
-
-## 💻 How to Run
-
-### Option 1: Interactive Notebook
-```mathematica
-1. Open: notebook/rotating_link_impact.nb
-2. Click: Evaluation → Evaluate Notebook
-3. Interact with the animation slider
-```
-
-### Option 2: Script Execution
-```mathematica
-1. Run: src/rotating_link_impact.wl
-2. View output in console
-3. Animation window opens automatically
-```
-
-### Quick Start
-```mathematica
-(* Load the file *)
-<< "rotating_link_impact.wl"
-
-(* Animation is immediately available *)
-(* Adjust time slider to explore motion *)
-```
 
 ---
 
@@ -273,25 +246,6 @@ This project demonstrates:
 - ✅ **Scientific Visualization** — Real-time interactive graphics
 
 These techniques are foundational in **robotics**, **aerospace engineering**, **physics engines**, and **computational mechanics**.
-
----
-
-## 📁 Project Structure
-
-```
-rotating-link-projectile/
-│
-├── 📓 notebook/
-│   └── rotating_link_impact.nb    # Interactive Mathematica notebook
-│
-├── 📜 src/
-│   └── rotating_link_impact.wl    # Standalone script version
-│
-├── 📊 assets/
-│   └── demo.gif                   # Animation preview (optional)
-│
-└── 📖 README.md                   # This file
-```
 
 ---
 
