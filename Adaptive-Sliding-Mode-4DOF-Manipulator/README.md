@@ -141,12 +141,3 @@ The control approach used here is exactly what is taught in **advanced nonlinear
 **Gustavo Torres**  
 M.S. Mechanical Engineering – Robotics & Control  
 Manufacturing Engineer | Robotics & Physical AI  
-
----
-
-If you’d like, next I can help you:
-- choose the **best video or plot** to embed at the top of the README
-- add **badges** (MATLAB, Mathematica, Control Theory, Robotics)
-- or turn this into a **portfolio-ready GitHub landing page**
-
-This project is strong enough to carry interviews by itself.
