@@ -11,7 +11,7 @@
 
 *Shows how heavier objects experience greater friction forces, causing different trajectories*
 
-[Demo](#-results) • [Physics](#-physics-model) • [Usage](#-how-to-run)
+[Demo](#-results) • [Physics](#-physics-model) • [Usage](#-Why-this-matters)
 
 ---
 
