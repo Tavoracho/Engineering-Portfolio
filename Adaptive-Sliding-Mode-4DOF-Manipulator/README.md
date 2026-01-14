@@ -164,27 +164,120 @@ These are computed symbolically and numerically solved using Mathematica’s **D
 
 ---
 
-## 💥 Impact & Bouncing Physics
+## 🧱 Robot Wall Impact & Bounce Physics (Contact Extension)
 
-When payloads are dropped, their bouncing is modeled using:
+This “Part 2” extends the project beyond free-space manipulation into **contact dynamics** by simulating a **tip collision with a vertical wall**.
 
-### Restitution (Normal Direction)
+* The robot is commanded to reach a target **past the wall** (intentionally impossible without collision) 
+* The simulation **detects collision** when the tip crosses `x ≥ wallX` and estimates pre-impact tip velocity 
+* A **wall impulse model** applies restitution (normal direction) + Coulomb friction (tangential direction) 
+* The robot then switches into a second phase: **bounce-back trajectory planning** starting from the **collision state** 
 
-```math
-v_n^+ = -e\,v_n^-
+**Wall configuration (in code):**
+
+* `wallX = 2.3 m` 
+* `eWall = 0.7` (restitution) 
+* `μWall = 0.1` (friction) 
+* `mTip = 0.50 kg` effective tip mass 
+
+---
+
+### 🎥 Results (Wall Bounce)
+
+**Animation (tip impacts wall, then bounces and re-tracks):**
+
+```
+media/robot_wall_bounce.mp4
 ```
 
-### Coulomb Friction (Tangential)
+**Static trajectory plot (Blue = approach, Green = bounce):**
 
-```math
-J_t = \mu J_n = \mu m |v_n^-|(1+e)
+```
+plots/robot_wall_bounce_static.png
 ```
 
-The simulation shows:
+---
 
-* **13 bounces before rest**
-* **~49% energy retained per bounce**
-* **Sliding → sticking transitions** 
+### 🔬 Impact Model (Impulse-Based)
+
+The wall contact is modeled as an **instantaneous impulse update** on the tip velocity.
+
+#### 1) Normal direction (restitution)
+
+Normal axis is **x** (wall normal), so the x-velocity reverses with restitution:
+
+```math
+v_x^+ = -e_{\text{wall}} \, v_x^-
+```
+
+This is implemented directly in your `ApplyWallImpact()` function .
+
+---
+
+#### 2) Tangential direction (Coulomb friction impulse)
+
+Tangential axis is **y**. First compute a normal impulse magnitude:
+
+```math
+J_n = m_{\text{tip}}\,|v_x^-|\,(1+e_{\text{wall}})
+```
+
+Then the friction impulse is:
+
+```math
+J_t = \mu_{\text{wall}}\,J_n
+```
+
+And the tangential velocity update uses a **sliding vs sticking** condition:
+
+```math
+\Delta v_t = J_t / m_{\text{tip}}
+```
+---
+#### 3) Energy retained
+
+You compute and print the energy retention across impact as:
+
+```math
+\eta = \frac{(v_x^+)^2 + (v_y^+)^2}{(v_x^-)^2 + (v_y^-)^2}
+```
+
+The code prints this directly as a percentage after impact .
+
+---
+
+### 🧩 Two-Phase Control Structure
+
+The wall-bounce simulation is intentionally structured as:
+
+**Phase 1 — Approach:** track a desired trajectory toward a target that lies past the wall.
+**Phase 2 — Bounce:** once impact occurs, re-initialize the system at the collision angles/velocities and track a new desired trajectory away from the wall.
+
+The output logs show the full sequence:
+
+* collision detected at `t ≈ 1.56 s`
+* pre/post impact velocities
+* then bounce phase completes successfully 
+
+---
+
+### ✅ Why This Extension Is Important
+
+Most student robotics projects stop at “trajectory tracking in free space.”
+
+This demonstrates the next step toward real manipulation:
+
+✅ **contact detection**
+✅ **impulse-based collision response**
+✅ **sliding vs sticking friction modes**
+✅ **state reset after collision**
+✅ **re-planning a stabilizing trajectory after impact**
+
+That’s exactly the foundation for:
+
+* compliant manipulation
+* force-control extensions
+* hybrid systems (continuous dynamics + discrete events)
 
 ---
 
@@ -267,3 +360,4 @@ This is written at the level of **Slotine & Li** and **Spong & Vidyasagar**.
 *Advanced nonlinear control meets real robotic uncertainty*
 
 </div>
+
