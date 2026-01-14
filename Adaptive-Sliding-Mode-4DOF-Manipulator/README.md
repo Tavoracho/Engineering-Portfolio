@@ -362,15 +362,16 @@ This project demonstrates **real robotics problems**:
 
 A **graduate-level technical report** is included that derives:
 
-* Robot dynamics
-* Sliding-mode stability
-* Regressor-based adaptive control
-* Impact mechanics
-* Performance analysis
+- Robot dynamics  
+- Sliding-mode stability  
+- Regressor-based adaptive control  
+- Impact mechanics  
+- Performance analysis  
 
-📄 `Adaptive-Sliding-Mode-4DOF-Manipulator/Report/Adaptive-Sliding-Mode-4DOF-Manipulator.pdf`
+📄 **[Read the full technical report (PDF)](https://github.com/gustavotorr/Engineering-Portfolio/blob/main/Adaptive-Sliding-Mode-4DOF-Manipulator/Report/Adaptive-Sliding-Mode-4DOF-Manipulator.pdf)**  
 
-This is written at the level of **Slotine & Li** and **Spong & Vidyasagar**.
+This document is written at the level of **Slotine & Li** and **Spong & Vidyasagar**.
+
 
 ---
 
@@ -390,6 +391,7 @@ This is written at the level of **Slotine & Li** and **Spong & Vidyasagar**.
 *Advanced nonlinear control meets real robotic uncertainty*
 
 </div>
+
 
 
 
