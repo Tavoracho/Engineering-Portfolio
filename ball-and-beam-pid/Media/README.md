@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/gustavotorr/Engineering-Portfolio/main/ball-and-beam-pid/Media/Photos/R0001879.jpg" width="85%" style="border-radius:14px;">
+</p>
 <table>
   <tr>
     <td><img src="https://raw.githubusercontent.com/gustavotorr/Engineering-Portfolio/main/ball-and-beam-pid/Media/Photos/R0001871.JPG" style="width:100%; border-radius:12px;"></td>
