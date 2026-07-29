@@ -1,73 +1,34 @@
-# 🛠 Engineering Portfolio — Gustavo Torres
+# Engineering Portfolio
 
-This repository is a **technical archive of my robotics, control systems, and physical AI projects**.
+I'm Gustavo Torres. This repository is where I keep my robotics, control systems, and physical AI projects — the code, the math, the CAD, and video of the results.
 
-Each project contains:
-- simulation videos  
-- analysis plots  
-- control code  
-- CAD files  
-- and detailed documentation  
+A polished overview lives at **[gustavotorr.github.io/Engineering-Portfolio](https://gustavotorr.github.io/Engineering-Portfolio/)**. The folders here hold the full detail.
 
-This portfolio is designed to demonstrate how I design, simulate, and validate **real-world electromechanical systems** under realistic constraints.
+## Projects
 
----
+**[Adaptive Sliding-Mode Control of a 4-DOF Manipulator](Adaptive-Sliding-Mode-4DOF-Manipulator)**
+A nonlinear adaptive controller doing pick-and-place with link masses underestimated by 20% and payload mass by 57%. Includes a wall-impact contact extension and a full technical report.
 
-## 🚀 Flagship Projects
+**[Ball-and-Beam PID Controller](ball-and-beam-pid)**
+Hardware. An Arduino balances a ball on a beam using a time-of-flight sensor and a servo, with live PID tuning from an onboard joystick. ([demo video](https://youtu.be/9JrFDMzFvnI))
 
-### 🦾 Adaptive Sliding-Mode Control of a 4-DOF Robot Manipulator  
-Nonlinear adaptive control of a robotic arm performing multi-target pick-and-place under payload uncertainty and contact dynamics.  
-📁 `Adaptive-Sliding-Mode-4DOF-Manipulator`
+**[Statically Balanced Mechanism](Statically-Balanced-Mechanism)**
+Hardware. A 3D-printed arm that holds its payload at any angle with zero holding torque — a spring and an analytically derived teardrop cam cancel gravity exactly. Derivation included. ([demo video](https://youtu.be/1I35prm3X8c))
 
----
+**[Bouncing-Ball Physics Simulator](Bouncing-Ball-Physics-Simulator)**
+An impulse-based collision model showing why heavier objects can stop sooner: friction during impact scales with mass.
 
-### ⚽ Mass-Dependent Bouncing Ball Physics Simulator  
-Impulse-based collision and friction model showing how mass alters real-world bounce trajectories.  
-📁 `Bouncing-Ball-Physics-Simulator`
+**[3-Link Robot Artist](3-Link-Robot-Artist)**
+A 3-DOF planar arm with symbolically derived Lagrangian dynamics traces cursive handwriting under sliding-mode control.
 
----
+**[Rotating-Link Projectile](Projectile-Motion-Simulation)**
+A rigid rod launched with spin: which tip hits the ground first, where, and in what state.
 
-### 🎮 Ball-and-Beam PID Controller  
-Real-time embedded control system balancing a ball using distance sensing and servo actuation.  
-📁 `ball-and-beam-pid`
+## Layout
 
----
+Each project folder contains its own README, media (videos, plots, photos), source code, and where relevant CAD files and written derivations.
 
-### ⚖️ Statically Balanced Mechanism — Spring-Cam Gravity Compensator  
-A 3D-printed arm that holds its payload at any angle with zero holding torque, using an analytically derived teardrop cam and a linear spring.  
-📁 `Statically-Balanced-Mechanism` · [▶ Demo video](https://youtu.be/1I35prm3X8c)
+## Contact
 
----
-
-## 📂 Repository Structure
-
-Each project folder contains:
-- a project-specific README  
-- videos and animations  
-- plots and analysis results  
-- simulation or firmware code  
-- engineering documentation  
-
-Start with the **flagship projects** above for the most advanced work.
-
----
-
-## 🧭 How This Portfolio Is Used
-
-This repository is meant to support:
-- job applications  
-- technical interviews  
-- research discussions  
-- and engineering reviews  
-
-Each project can be explored independently, with full context provided inside its folder.
-
----
-
-## 📬 Contact
-
-If you arrived here from my GitHub profile or LinkedIn and have questions about any project:
-
-**Gustavo Torres**  
-📧 tgustavo21@gmail.com  
-💼 LinkedIn: https://www.linkedin.com/in/gustavo-torres111/
+- Email: tgustavo21@gmail.com
+- LinkedIn: [gustavo-torres111](https://www.linkedin.com/in/gustavo-torres111/)

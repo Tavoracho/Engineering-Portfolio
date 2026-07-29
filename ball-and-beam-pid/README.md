@@ -1,253 +1,96 @@
+# Ball-and-Beam PID Controller
+
 <p align="center">
   <a href="https://youtu.be/9JrFDMzFvnI">
-    <img src="https://github.com/gustavotorr/Engineering-Portfolio/blob/5ac5bbe5fecd9bf43e837780f4e253bbd4ab8b72/ball-and-beam-pid/Media/Photos/ball%20%26%20beam%20pid%20robot.png"
-         width="85%"
-         style="border-radius:14px;">
+    <img src="Media/Photos/ball%20%26%20beam%20pid%20robot.png" width="85%">
   </a>
 </p>
 
-<p align="center"><b>▶ Click image to watch demo video on YouTube</b></p>
+<p align="center"><i>Click the image for the demo video.</i></p>
 
-# Ball-and-Beam PID Controller
+A real-time control system that balances a ball on a beam. A VL53L0X time-of-flight sensor measures the ball's position, a PID loop computes the correction, and a servo tilts the beam to hold the setpoint. Gains are tuned live from an onboard joystick with an OLED dashboard — no computer needed once it's flashed.
 
-A real-time PID control system that balances a ball on a beam using distance sensing and servo actuation. Features live tuning via joystick interface and OLED display feedback.
+## How it works
 
-![System Status](https://img.shields.io/badge/status-stable-brightgreen) ![Arduino](https://img.shields.io/badge/platform-Arduino-00979D)
+The control loop runs every 35 ms (about 28.6 Hz):
 
-## 🎯 Project Overview
+1. Read the distance sensor
+2. Validate and filter the reading (7-sample moving average, jump rejection)
+3. Compute the PID output
+4. Constrain and apply the servo command
+5. Update statistics
 
-This project implements a classic control systems problem: maintaining a ball at a target position on a tilting beam. The system uses a VL53L0X Time-of-Flight sensor to measure ball position, processes the data through a PID controller, and adjusts beam angle via servo motor to maintain the desired setpoint.
+With default tuning it settles in 2–4 seconds and holds steady-state error under 1 cm.
 
-### Key Features
+A few implementation details that mattered in practice:
 
-- **Real-time PID Control** with 35ms sample time
-- **Interactive Tuning** via analog joystick (no computer required)
-- **Live Statistics** tracking error, failures, and performance
-- **Smart Filtering** with moving average and jump detection
-- **OLED Dashboard** showing system status and visual error bar
-- **Robust Error Handling** for sensor timeouts and invalid readings
+- **Jump rejection** — readings that change more than 6 cm between samples are discarded; the ToF sensor occasionally glitches
+- **Derivative filtering** — a low-pass filter (α = 0.6) on the D term keeps sensor noise out of the servo
+- **Integral windup protection** — the I term is clamped so a saturated servo doesn't wind up a huge correction
+- **Range validation and timeout handling** — out-of-range readings and I2C failures are handled instead of fed into the loop
 
-## 🛠️ Hardware Requirements
+## Hardware
 
-### Components
+| Component | Part |
+|---|---|
+| Microcontroller | Arduino Mega (or compatible) |
+| Distance sensor | VL53L0X time-of-flight |
+| Actuator | standard hobby servo |
+| Display | SSD1306 OLED, 128×64 |
+| Input | 2-axis analog joystick + push button |
 
-| Component | Model | Purpose |
-|-----------|-------|---------|
-| Microcontroller | Arduino Mega/compatible | Main controller |
-| Distance Sensor | VL53L0X Time-of-Flight | Ball position measurement |
-| Servo Motor | Standard hobby servo | Beam angle control |
-| Display | SSD1306 OLED (128×64) | User interface |
-| Input | 2-axis Analog Joystick | Parameter tuning |
-| Button | Momentary push button | System enable/pause |
+Beam length is 32.2 cm with a valid sensing range of 1.5–33.7 cm. The sensor mounts at one end of the beam pointing along it; the servo tilts the beam from below. Servo flat position is 112° (adjust for your servo), with travel limited to 25°–180°.
 
 ### Wiring
 
 ```
-VL53L0X:
-  - VCC → 5V
-  - GND → GND
-  - SDA → SDA (Pin 20)
-  - SCL → SCL (Pin 21)
-
-SSD1306 OLED:
-  - VCC → 5V
-  - GND → GND
-  - SDA → SDA (Pin 20)
-  - SCL → SCL (Pin 21)
-
-Servo:
-  - Signal → Pin 30
-  - VCC → 5V (or external power for high-torque servos)
-  - GND → GND
-
-Joystick:
-  - VRx → A0
-  - VRy → A1
-  - SW → Pin 5 (with internal pullup)
-  - VCC → 5V
-  - GND → GND
-
-Enable Button:
-  - One side → Pin 4 (with internal pullup)
-  - Other side → GND
+VL53L0X:            SDA → 20, SCL → 21, VCC → 5V, GND → GND
+SSD1306 OLED:       SDA → 20, SCL → 21, VCC → 5V, GND → GND
+Servo:              signal → 30, power → 5V (external supply for high-torque servos)
+Joystick:           VRx → A0, VRy → A1, SW → 5 (internal pullup)
+Enable button:      pin 4 (internal pullup) → GND
 ```
 
-## 📐 Mechanical Setup
+If the sensor fails intermittently, power the servo separately — servo current spikes brown out the I2C bus.
 
-- **Beam Length:** 32.2 cm
-- **Valid Range:** 1.5 - 33.7 cm from sensor
-- **Servo Flat Position:** 112° (adjust based on your servo)
-- **Servo Range:** 25° - 180°
+## Software
 
-Mount the VL53L0X sensor at one end of the beam, pointing along its length. The servo should be positioned to tilt the beam, with the ball able to roll freely along the surface.
+Libraries (via the Arduino Library Manager): `Servo` and `Wire` (built-in), `Adafruit_GFX`, `Adafruit_SSD1306`, and Pololu's `VL53L0X`.
 
-## 💻 Software Setup
+Open `Code/Ball_On_Beam_PID.ino` in the Arduino IDE and upload.
 
-### Dependencies
+## Using it
 
-Install these libraries via Arduino Library Manager:
+Power on, then press the enable button to start control; press it again to pause. The OLED shows status, measured and target distance, and a visual error bar.
 
-```cpp
-- Servo (built-in)
-- Wire (built-in)
-- Adafruit_GFX
-- Adafruit_SSD1306
-- VL53L0X (Pololu)
-```
+Press the joystick button to open the menu, move up/down to navigate, and press to edit a value (left/right to adjust, press again to save):
 
-### Installation
+| Setting | Step |
+|---|---|
+| Kp | ±0.1 |
+| Ki | ±0.01 |
+| Kd | ±0.1 |
+| Target | ±0.5 cm |
 
-1. Clone this repository:
-```bash
-git clone https://github.com/gustavotorr/ball-beam-pid.git
-```
+`RESET` restores the defaults: Kp = 6.2, Ki = 0.15, Kd = 3.1, target = 18.0 cm, with a 1.0 cm deadband.
 
-2. Open `Ball_On_Beam_PID.ino` in Arduino IDE
+### Tuning notes
 
-3. Install required libraries (see above)
+Start from the defaults and adjust one gain at a time. If the ball oscillates, Kp is too high. If it responds sluggishly, raise Kp or lower Kd. If it consistently rests off-target, raise Ki — carefully, since too much causes slow oscillation. The serial monitor (9600 baud) streams the PID terms every 5 loops and prints error statistics every 500, which makes it easy to see which term is misbehaving.
 
-4. Upload to your Arduino board
+### Troubleshooting
 
-## 🎮 Usage
+| Symptom | Likely cause |
+|---|---|
+| "SENSOR FAILED!" at startup | wiring or I2C address issue |
+| Wild oscillation | Kp too high |
+| Slow response | Kp too low or Kd too high |
+| Persistent offset | Ki too low |
+| "! SAT" on the display | servo output saturated — check mechanics or reduce gains |
+| Intermittent sensor failures | servo drawing down the 5V rail; use external power |
 
-### Basic Operation
+## Author
 
-1. **Power On:** System initializes and displays "Booting System..."
-2. **Press Enable Button:** Starts PID control (shows "RUNNING")
-3. **Press Enable Again:** Pauses system (shows "PAUSED")
+Gustavo Torres — [GitHub](https://github.com/gustavotorr) · [LinkedIn](https://www.linkedin.com/in/gustavo-torres111/)
 
-### Dashboard Display
-
-```
-STATUS: >> RUNNING
-DIST: 18.3 cm
-TARG: 18.0 cm
-[========|--------] ← Visual error bar
-```
-
-### Menu System
-
-**Access Menu:** Press joystick button from dashboard
-
-**Navigate:** Move joystick up/down
-
-**Edit Parameter:** Press button on Kp, Ki, Kd, or Target
-- Move joystick left/right to adjust value
-- Press button again to save
-
-**Menu Options:**
-- `Kp` - Proportional gain (adjust ±0.1)
-- `Ki` - Integral gain (adjust ±0.01)
-- `Kd` - Derivative gain (adjust ±0.1)
-- `Target` - Target distance in cm (adjust ±0.5)
-- `RESET` - Restore default PID values
-- `EXIT` - Return to dashboard
-
-## 🔧 Tuning Guide
-
-### Default PID Values
-
-```cpp
-Kp = 6.2   // Proportional gain
-Ki = 0.15  // Integral gain
-Kd = 3.1   // Derivative gain
-Target = 18.0 cm  // Setpoint
-Deadband = 1.0 cm // No-control zone
-```
-
-### Tuning Process
-
-1. **Start with Defaults:** Run system and observe behavior
-2. **Adjust Kp:** 
-   - Too low → slow response
-   - Too high → oscillation
-3. **Adjust Kd:** 
-   - Dampens oscillations
-   - Higher values reduce overshoot
-4. **Adjust Ki:** 
-   - Eliminates steady-state error
-   - Too high causes instability
-
-### Performance Monitoring
-
-The system tracks and displays via Serial Monitor (9600 baud):
-
-**Real-time Data (every 5 loops):**
-```
-18.3 | 18.0 | -0.3 | P:-1.9 I:0.2 D:0.5 | -1.2 | 125 | CTRL
-```
-
-**Statistics (every 500 loops):**
-```
---- STATS ---
-Loops: 500 | Sensor Fails: 0 | Jump Rejects: 2
-Max Error: 3.2 cm | Avg Error: 0.45 cm
-```
-
-## 📊 System Architecture
-
-### Control Loop (35ms cycle)
-
-```
-1. Read Distance Sensor
-   ↓
-2. Validate & Filter Reading
-   ↓
-3. Calculate PID Output
-   ↓
-4. Constrain & Apply to Servo
-   ↓
-5. Update Statistics
-```
-
-### Safety Features
-
-- **Jump Rejection:** Ignores readings that change >6.0 cm between samples
-- **Range Validation:** Discards readings outside 1.5-33.7 cm
-- **Timeout Detection:** Handles sensor communication failures
-- **Output Limiting:** Constrains servo angle to safe range
-- **Integral Windup Protection:** Limits integral term accumulation
-
-### Filtering
-
-- **Moving Average:** 7-sample buffer smooths sensor noise
-- **Derivative Filter:** Low-pass filter (α=0.6) on D-term reduces high-frequency noise
-
-## 🐛 Troubleshooting
-
-| Problem | Possible Cause | Solution |
-|---------|---------------|----------|
-| "SENSOR FAILED!" on startup | Wiring or I2C issue | Check VL53L0X connections, verify I2C address |
-| Ball oscillates wildly | Kp too high | Reduce proportional gain |
-| Slow response | Kp too low or Kd too high | Increase Kp, decrease Kd |
-| Steady-state error | Ki too low | Increase integral gain |
-| "! SAT" status | Output saturated | Check mechanical range, reduce gains |
-| Intermittent sensor failures | Power supply issue | Use external power for servo |
-
-## 📈 Performance Characteristics
-
-- **Sample Rate:** ~28.6 Hz (35ms period)
-- **Sensor Range:** 1.5 - 33.7 cm
-- **Measurement Accuracy:** ±1-2mm (typical)
-- **Settling Time:** ~2-4 seconds (with default tuning)
-- **Steady-State Error:** <1.0 cm (within deadband)
-
-## 📝 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 👤 Author
-
-**Your Name**
-- GitHub: [@gustavotorr](https://github.com/gustavotorr)
-- LinkedIn: [Gustavo Torres](https://www.linkedin.com/in/gustavo-torres111/)
-
-## 🙏 Acknowledgments
-
-- VL53L0X library by Pololu
-- Adafruit for display libraries
-- Arduino community for inspiration
-
----
-
-⭐ Star this repo if you find it helpful!
+MIT license. Thanks to Pololu for the VL53L0X library and Adafruit for the display libraries.
