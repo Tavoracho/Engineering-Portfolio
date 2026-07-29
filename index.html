@@ -171,6 +171,12 @@
   .cat-card h3 { font-size: 1.1rem; font-weight: 750; letter-spacing: -0.01em; margin: 10px 0 8px; }
   .cat-card p { color: var(--grey); font-size: 0.9rem; margin-bottom: 20px; flex: 1; }
 
+  /* ===== 3D viewer ===== */
+  .viewer { position: relative; aspect-ratio: 4 / 3; background: #fff; }
+  .viewer canvas { width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+  .viewer canvas:active { cursor: grabbing; }
+  .viewer .viewer-hint { position: absolute; left: 14px; bottom: 12px; pointer-events: none; }
+
   /* ===== learning panel ===== */
   .learn {
     margin-top: 64px; border: 1px solid var(--hair-dark); background: var(--paper);
@@ -430,14 +436,44 @@
       </div>
     </div>
 
-    <!-- 04 Bouncing Ball -->
+    <!-- 03b Interactive cam viewer -->
     <div class="project flip">
+      <div class="p-media">
+        <div class="viewer" id="cam-viewer">
+          <canvas id="cam-canvas" aria-label="Interactive 3D model of the teardrop cam"></canvas>
+          <span class="viewer-hint label" id="cam-hint">Loading model…</span>
+        </div>
+        <div class="p-caption">
+          <span class="label">Fig. 05 — The printed cam, exact 3MF geometry</span>
+          <span class="label">Drag to rotate</span>
+        </div>
+      </div>
+      <div class="p-body">
+        <span class="index">No. 03 — Detail</span>
+        <h3>The cam, in your browser</h3>
+        <div class="p-kind">Interactive · WebGL</div>
+        <p>
+          This is the same file the printer received, not a render — the arm and its cam print
+          as one piece. The teardrop at the end is the derived profile
+          R(θ) = R<sub>max</sub>&thinsp;cos(θ/2): the radius the string sees at every arm angle,
+          which is why the spring torque comes out a pure sine and cancels gravity everywhere.
+          The math, in plastic.
+        </p>
+        <div class="p-links">
+          <a href="Statically-Balanced-Mechanism/CAD/Cam%20Assembly/Cam.3MF" download>Download the part</a>
+          <a href="https://github.com/gustavotorr/Engineering-Portfolio/blob/main/Statically-Balanced-Mechanism/Derivation/Tear%20Drop%20Derivation.pdf" target="_blank" rel="noopener">The derivation</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 Bouncing Ball -->
+    <div class="project">
       <div class="p-media">
         <video autoplay loop muted playsinline preload="metadata">
           <source src="Bouncing-Ball-Physics-Simulator/Media/bouncing_balls_animation.mp4" type="video/mp4">
         </video>
         <div class="p-caption">
-          <span class="label">Fig. 05 — Four masses, identical launch velocity</span>
+          <span class="label">Fig. 06 — Four masses, identical launch velocity</span>
           <span class="label"><span class="mark mk-circle"></span>Simulation</span>
         </div>
       </div>
@@ -548,7 +584,7 @@
             <text x="30" y="12" text-anchor="start">REWARD ↑</text>
           </g>
         </svg>
-        <div class="fig-cap label">Fig. 06 — Episode reward over training</div>
+        <div class="fig-cap label">Fig. 07 — Episode reward over training</div>
       </div>
     </div>
   </div>
@@ -608,6 +644,109 @@
     </div>
   </div>
 </footer>
+
+<script type="importmap">
+{ "imports": { "three": "./assets/three/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from './assets/three/controls/OrbitControls.js';
+import { ThreeMFLoader } from './assets/three/loaders/3MFLoader.js';
+
+const host = document.getElementById('cam-viewer');
+const canvas = document.getElementById('cam-canvas');
+const hint = document.getElementById('cam-hint');
+
+if (host && canvas && window.WebGLRenderingContext) {
+  const io = new IntersectionObserver((entries) => {
+    if (entries.some((e) => e.isIntersecting)) { io.disconnect(); init(); }
+  }, { rootMargin: '250px' });
+  io.observe(host);
+}
+
+function init() {
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  } catch (e) {
+    hint.textContent = 'WebGL unavailable';
+    return;
+  }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(30, 4 / 3, 0.1, 2000);
+
+  // soft studio light: neutral, no drama
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x9aa4ad, 1.0));
+  const key = new THREE.DirectionalLight(0xffffff, 1.7);
+  key.position.set(3, 5, 4);
+  scene.add(key);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.45);
+  fill.position.set(-4, 2, -3);
+  scene.add(fill);
+
+  const controls = new OrbitControls(camera, canvas);
+  controls.enablePan = false;
+  controls.enableZoom = false;   // never steal the page scroll
+  controls.rotateSpeed = 0.9;
+
+  const render = () => renderer.render(scene, camera);
+  controls.addEventListener('change', render);
+
+  const resize = () => {
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    render();
+  };
+  new ResizeObserver(resize).observe(canvas);
+
+  new ThreeMFLoader().load(
+    'Statically-Balanced-Mechanism/CAD/Cam%20Assembly/Cam.3MF',
+    (object) => {
+      const material = new THREE.MeshStandardMaterial({
+        color: 0xe84e1b, roughness: 0.62, metalness: 0.05
+      });
+      object.traverse((n) => {
+        if (n.isMesh) {
+          n.material = material;
+          if (!n.geometry.attributes.normal) n.geometry.computeVertexNormals();
+        }
+      });
+      object.rotation.x = -Math.PI / 2; // 3MF is Z-up; three.js is Y-up
+
+      const holder = new THREE.Group();
+      holder.add(object);
+      scene.add(holder);
+
+      const box = new THREE.Box3().setFromObject(holder);
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      holder.position.sub(center);
+
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const dist = (maxDim / (2 * Math.tan((camera.fov * Math.PI) / 360))) * 1.35;
+      // the part is 6 mm thin along Z — the profile face looks down +Z, so view from there
+      const dir = new THREE.Vector3(0.18, 0.3, 1).normalize();
+      camera.position.copy(dir.multiplyScalar(dist));
+      camera.near = dist / 100;
+      camera.far = dist * 10;
+      camera.updateProjectionMatrix();
+      camera.lookAt(0, 0, 0);
+      controls.target.set(0, 0, 0);
+      controls.update();
+
+      hint.remove();
+      resize();
+    },
+    undefined,
+    () => { hint.textContent = 'Model failed to load'; }
+  );
+}
+</script>
 
 </body>
 </html>
