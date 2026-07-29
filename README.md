@@ -33,6 +33,12 @@ Real-time embedded control system balancing a ball using distance sensing and se
 
 ---
 
+### ⚖️ Statically Balanced Mechanism — Spring-Cam Gravity Compensator  
+A 3D-printed arm that holds its payload at any angle with zero holding torque, using an analytically derived teardrop cam and a linear spring.  
+📁 `Statically-Balanced-Mechanism` · [▶ Demo video](https://youtu.be/1I35prm3X8c)
+
+---
+
 ## 📂 Repository Structure
 
 Each project folder contains:

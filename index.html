@@ -394,19 +394,55 @@
       </div>
     </div>
 
-    <!-- 03 Bouncing Ball -->
+    <!-- 03 Statically Balanced Mechanism -->
     <div class="project">
+      <div class="p-media">
+        <video controls preload="none" playsinline poster="Statically-Balanced-Mechanism/Media/Thumbnail%20Horizontal.png">
+          <source src="Statically-Balanced-Mechanism/Media/Statically%20Balanced%20Mechanism%20v2.mp4" type="video/mp4">
+        </video>
+        <div class="p-caption">
+          <span class="label">Fig. 04 — Payload parked at arbitrary angles, no holding torque</span>
+          <span class="label"><span class="mark mk-square"></span>Hardware</span>
+        </div>
+      </div>
+      <div class="p-body">
+        <span class="index">No. 03</span>
+        <h3>Statically Balanced Mechanism</h3>
+        <div class="p-kind">Mechanism design · Gravity compensation</div>
+        <p>
+          A 3D-printed arm that holds its payload perfectly still at <b>any</b> angle — passively,
+          with no motor and zero holding torque. A linear spring, routed by a string over an
+          analytically derived teardrop cam, produces a torque that cancels gravity identically
+          across a full rotation. The cam profile falls out of one equation: constant total
+          potential energy, <b>∂V/∂θ = 0</b>.
+        </p>
+        <table class="data">
+          <tr><td>Cam profile</td><td><em>R(θ) = R<sub>max</sub> cos(θ/2)</em></td></tr>
+          <tr><td>Cam radius R<sub>max</sub> = √(mgL/k)</td><td><em>0.980 in</em></td></tr>
+          <tr><td>Payload / arm</td><td>0.485 kg on a 5 in arm</td></tr>
+          <tr><td>Holding torque</td><td><em>zero</em>, full 360°</td></tr>
+        </table>
+        <div class="p-links">
+          <a href="https://github.com/gustavotorr/Engineering-Portfolio/tree/main/Statically-Balanced-Mechanism" target="_blank" rel="noopener">Docs &amp; print files</a>
+          <a href="https://github.com/gustavotorr/Engineering-Portfolio/blob/main/Statically-Balanced-Mechanism/Derivation/Tear%20Drop%20Derivation.pdf" target="_blank" rel="noopener">Cam derivation</a>
+          <a href="https://youtu.be/1I35prm3X8c" target="_blank" rel="noopener">Demo on YouTube</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 Bouncing Ball -->
+    <div class="project flip">
       <div class="p-media">
         <video autoplay loop muted playsinline preload="metadata">
           <source src="Bouncing-Ball-Physics-Simulator/Media/bouncing_balls_animation.mp4" type="video/mp4">
         </video>
         <div class="p-caption">
-          <span class="label">Fig. 04 — Four masses, identical launch velocity</span>
+          <span class="label">Fig. 05 — Four masses, identical launch velocity</span>
           <span class="label"><span class="mark mk-circle"></span>Simulation</span>
         </div>
       </div>
       <div class="p-body">
-        <span class="index">No. 03</span>
+        <span class="index">No. 04</span>
         <h3>Mass-Dependent Bouncing-Ball Physics</h3>
         <div class="p-kind">Impact mechanics · Physics simulation</div>
         <p>
@@ -445,7 +481,7 @@
           <source src="3-Link-Robot-Artist/Media/RobotArmOutput.mp4" type="video/mp4">
         </video>
         <div class="c-body">
-          <span class="index">No. 04</span>
+          <span class="index">No. 05</span>
           <h3>3-Link Robot Artist — Sliding-Mode Trajectory Tracking</h3>
           <p>
             A 3-DOF planar manipulator with fully symbolic Lagrangian dynamics tracks a cursive
@@ -462,7 +498,7 @@
           <source src="Projectile-Motion-Simulation/Media/ProjectileSimulation.mp4" type="video/mp4">
         </video>
         <div class="c-body">
-          <span class="index">No. 05</span>
+          <span class="index">No. 06</span>
           <h3>Rotating-Link Projectile — Tip Impact Detection</h3>
           <p>
             A rigid rod launched with coupled linear and angular velocity: the simulation solves
@@ -512,7 +548,7 @@
             <text x="30" y="12" text-anchor="start">REWARD ↑</text>
           </g>
         </svg>
-        <div class="fig-cap label">Fig. 05 — Episode reward over training</div>
+        <div class="fig-cap label">Fig. 06 — Episode reward over training</div>
       </div>
     </div>
   </div>
