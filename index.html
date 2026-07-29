@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gustavo Torres — Robotics & Controls Engineering Portfolio</title>
+<meta name="description" content="Engineering portfolio of Gustavo Torres — robotics, nonlinear control systems, embedded systems, and physical AI projects.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0f14;
+    --bg-soft: #10161e;
+    --card: #141c26;
+    --card-hover: #182231;
+    --border: #1f2b3a;
+    --text: #e6edf3;
+    --muted: #94a6b8;
+    --accent: #4cc2ff;
+    --accent-soft: rgba(76, 194, 255, 0.12);
+    --accent-2: #7ee2a8;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  img, video { max-width: 100%; display: block; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ===== Nav ===== */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(11, 15, 20, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px; max-width: 1080px; margin: 0 auto;
+  }
+  .nav-name { font-weight: 700; font-size: 1rem; color: var(--text); letter-spacing: -0.01em; }
+  .nav-name span { color: var(--accent); }
+  .nav-links { display: flex; gap: 22px; font-size: 0.9rem; }
+  .nav-links a { color: var(--muted); font-weight: 500; }
+  .nav-links a:hover { color: var(--text); text-decoration: none; }
+
+  /* ===== Hero ===== */
+  header.hero {
+    padding: 96px 0 72px;
+    background:
+      radial-gradient(ellipse 800px 400px at 70% -10%, rgba(76,194,255,0.10), transparent),
+      radial-gradient(ellipse 600px 300px at 20% 110%, rgba(126,226,168,0.06), transparent);
+    border-bottom: 1px solid var(--border);
+  }
+  .kicker {
+    font-family: var(--mono); font-size: 0.8rem; color: var(--accent);
+    letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 18px;
+  }
+  h1 {
+    font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+    font-weight: 800; letter-spacing: -0.03em; line-height: 1.1;
+    margin-bottom: 20px;
+  }
+  h1 .accent { color: var(--accent); }
+  .hero p.lead {
+    font-size: 1.15rem; color: var(--muted); max-width: 640px; margin-bottom: 32px;
+  }
+  .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 22px; border-radius: 8px; font-weight: 600; font-size: 0.95rem;
+    transition: all 0.15s ease;
+  }
+  .btn-primary { background: var(--accent); color: #06121c; }
+  .btn-primary:hover { background: #6fd0ff; text-decoration: none; transform: translateY(-1px); }
+  .btn-ghost { border: 1px solid var(--border); color: var(--text); background: transparent; }
+  .btn-ghost:hover { border-color: var(--accent); text-decoration: none; transform: translateY(-1px); }
+
+  .skills-strip {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-top: 40px;
+  }
+  .chip {
+    font-family: var(--mono); font-size: 0.78rem;
+    padding: 6px 14px; border-radius: 999px;
+    background: var(--accent-soft); color: var(--accent);
+    border: 1px solid rgba(76,194,255,0.25);
+  }
+
+  /* ===== Sections ===== */
+  section { padding: 72px 0; }
+  .section-label {
+    font-family: var(--mono); font-size: 0.8rem; color: var(--accent);
+    letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px;
+  }
+  h2 { font-size: 1.9rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 12px; }
+  .section-sub { color: var(--muted); max-width: 620px; margin-bottom: 48px; }
+
+  /* ===== Flagship cards ===== */
+  .project {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+    align-items: center; margin-bottom: 88px;
+  }
+  .project:last-child { margin-bottom: 0; }
+  .project.flip .p-media { order: 2; }
+  .p-media {
+    border-radius: 14px; overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--bg-soft);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  }
+  .p-media video, .p-media img { width: 100%; height: auto; }
+  .p-tag {
+    font-family: var(--mono); font-size: 0.75rem; color: var(--accent-2);
+    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px;
+  }
+  .p-body h3 { font-size: 1.45rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 14px; }
+  .p-body p { color: var(--muted); margin-bottom: 16px; font-size: 0.98rem; }
+  .p-stats {
+    display: flex; gap: 26px; margin: 20px 0; flex-wrap: wrap;
+  }
+  .stat .num { font-family: var(--mono); font-weight: 600; font-size: 1.15rem; color: var(--text); }
+  .stat .lbl { font-size: 0.78rem; color: var(--muted); }
+  .p-tech { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+  .p-tech span {
+    font-family: var(--mono); font-size: 0.72rem; color: var(--muted);
+    padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px;
+  }
+  .p-links { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.9rem; font-weight: 600; }
+  .p-links a::after { content: " →"; }
+
+  /* ===== Secondary grid ===== */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+    transition: all 0.2s ease;
+  }
+  .card:hover { background: var(--card-hover); border-color: #2a3a4f; transform: translateY(-3px); }
+  .card .c-body { padding: 24px; }
+  .card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 10px; }
+  .card p { color: var(--muted); font-size: 0.92rem; margin-bottom: 14px; }
+
+  /* ===== Gallery ===== */
+  .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .gallery img {
+    border-radius: 10px; border: 1px solid var(--border);
+    width: 100%; aspect-ratio: 4/3; object-fit: cover;
+  }
+
+  /* ===== Footer ===== */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 64px 0; text-align: center;
+    background: var(--bg-soft);
+  }
+  footer h2 { margin-bottom: 8px; }
+  footer p { color: var(--muted); margin-bottom: 28px; }
+  .foot-note { margin-top: 40px; font-size: 0.8rem; color: #5c6f82; }
+
+  @media (max-width: 800px) {
+    .project { grid-template-columns: 1fr; gap: 24px; }
+    .project.flip .p-media { order: 0; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .gallery { grid-template-columns: repeat(2, 1fr); }
+    .nav-links { display: none; }
+    header.hero { padding: 64px 0 48px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-name">Gustavo <span>Torres</span></div>
+    <div class="nav-links">
+      <a href="#flagship">Flagship Projects</a>
+      <a href="#more">More Projects</a>
+      <a href="#contact">Contact</a>
+      <a href="https://github.com/gustavotorr/Engineering-Portfolio" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Robotics · Control Systems · Physical AI</div>
+    <h1>I design, simulate, and validate<br><span class="accent">real-world electromechanical systems.</span></h1>
+    <p class="lead">
+      This portfolio is a technical archive of my robotics and control systems work —
+      from nonlinear adaptive controllers proven in high-fidelity simulation, to embedded
+      PID hardware built and tuned on the bench.
+    </p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#flagship">View Projects</a>
+      <a class="btn btn-ghost" href="https://www.linkedin.com/in/gustavo-torres111/" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn btn-ghost" href="mailto:tgustavo21@gmail.com">Email Me</a>
+    </div>
+    <div class="skills-strip">
+      <span class="chip">Nonlinear Control</span>
+      <span class="chip">Sliding-Mode &amp; Adaptive Control</span>
+      <span class="chip">Euler–Lagrange Dynamics</span>
+      <span class="chip">PID / Embedded C++</span>
+      <span class="chip">Wolfram Mathematica</span>
+      <span class="chip">Arduino</span>
+      <span class="chip">Impact &amp; Contact Mechanics</span>
+    </div>
+  </div>
+</header>
+
+<section id="flagship">
+  <div class="wrap">
+    <div class="section-label">01 — Flagship Projects</div>
+    <h2>Advanced control, from theory to hardware</h2>
+    <p class="section-sub">Each project includes full source code, analysis plots, simulation or demo videos, and engineering documentation in the repository.</p>
+
+    <!-- Adaptive SMC -->
+    <div class="project">
+      <div class="p-media">
+        <video autoplay loop muted playsinline preload="metadata" poster="Adaptive-Sliding-Mode-4DOF-Manipulator/Media/robot_wall_bounce_static.png">
+          <source src="Adaptive-Sliding-Mode-4DOF-Manipulator/Media/sequential_pickup.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="p-body">
+        <div class="p-tag">Nonlinear Adaptive Control</div>
+        <h3>Adaptive Sliding-Mode Control of a 4-DOF Manipulator</h3>
+        <p>
+          A fully nonlinear adaptive sliding-mode controller performing multi-target
+          pick-and-place inside a constrained workspace — with link masses underestimated
+          by 20% and payload mass underestimated by 57%. The controller adapts online and
+          stays stable through instantaneous payload changes and wall-impact contact dynamics.
+        </p>
+        <div class="p-stats">
+          <div class="stat"><div class="num">4/4</div><div class="lbl">pick-and-place cycles</div></div>
+          <div class="stat"><div class="num">57%</div><div class="lbl">payload mass error handled</div></div>
+          <div class="stat"><div class="num">~1–2 s</div><div class="lbl">tracking recovery</div></div>
+        </div>
+        <div class="p-tech">
+          <span>Euler–Lagrange dynamics</span><span>Adaptive SMC</span><span>Impact physics</span><span>Mathematica</span>
+        </div>
+        <div class="p-links">
+          <a href="https://github.com/gustavotorr/Engineering-Portfolio/tree/main/Adaptive-Sliding-Mode-4DOF-Manipulator" target="_blank" rel="noopener">Code &amp; docs</a>
+          <a href="https://github.com/gustavotorr/Engineering-Portfolio/blob/main/Adaptive-Sliding-Mode-4DOF-Manipulator/Report/Adaptive-Sliding-Mode-4DOF-Manipulator.pdf" target="_blank" rel="noopener">Technical report (PDF)</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ball and Beam -->
+    <div class="project flip">
+      <div class="p-media">
+        <video controls preload="none" playsinline poster="ball-and-beam-pid/Media/Photos/ball%20%26%20beam%20pid%20robot.png">
+          <source src="ball-and-beam-pid/Media/Videos/Ball%20On%20Beam%20GitHub.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="p-body">
+        <div class="p-tag">Embedded Hardware · Real-Time Control</div>
+        <h3>Ball-and-Beam PID Controller</h3>
+        <p>
+          A physical real-time control system I designed and built: a Time-of-Flight sensor
+          measures ball position at ~28.6 Hz, a PID loop computes the correction, and a servo
+          tilts the beam to hold the setpoint. Gains are tuned live from an onboard joystick
+          with an OLED dashboard — no computer required.
+        </p>
+        <div class="p-stats">
+          <div class="stat"><div class="num">35 ms</div><div class="lbl">control loop period</div></div>
+          <div class="stat"><div class="num">&lt;1 cm</div><div class="lbl">steady-state error</div></div>
+          <div class="stat"><div class="num">2–4 s</div><div class="lbl">settling time</div></div>
+        </div>
+        <div class="p-tech">
+          <span>Arduino / C++</span><span>PID + anti-windup</span><span>VL53L0X ToF</span><span>Sensor filtering</span><span>CAD</span>
+        </div>
+        <div class="p-links">
+          <a href="https://github.com/gustavotorr/Engineering-Portfolio/tree/main/ball-and-beam-pid" target="_blank" rel="noopener">Code &amp; docs</a>
+          <a href="https://youtu.be/9JrFDMzFvnI" target="_blank" rel="noopener">Demo on YouTube</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bouncing Ball -->
+    <div class="project">
+      <div class="p-media">
+        <video autoplay loop muted playsinline preload="metadata">
+          <source src="Bouncing-Ball-Physics-Simulator/Media/bouncing_balls_animation.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="p-body">
+        <div class="p-tag">Physics Simulation</div>
+        <h3>Mass-Dependent Bouncing Ball Physics Simulator</h3>
+        <p>
+          An impulse-based physics engine demonstrating why heavier objects don't always
+          travel farther: friction forces scale with mass during collisions. Models coefficient
+          of restitution, Coulomb friction, sliding-vs-sticking detection, and per-impact
+          energy loss across 12+ bounces.
+        </p>
+        <div class="p-tech">
+          <span>Impact mechanics</span><span>Coulomb friction</span><span>Restitution</span><span>Mathematica</span>
+        </div>
+        <div class="p-links">
+          <a href="https://github.com/gustavotorr/Engineering-Portfolio/tree/main/Bouncing-Ball-Physics-Simulator" target="_blank" rel="noopener">Code &amp; docs</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="more" style="background: var(--bg-soft); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="wrap">
+    <div class="section-label">02 — More Projects</div>
+    <h2>Additional simulation &amp; dynamics work</h2>
+    <p class="section-sub">Supporting projects in trajectory tracking and rigid-body kinematics.</p>
+    <div class="grid-2">
+      <div class="card">
+        <video autoplay loop muted playsinline preload="metadata">
+          <source src="3-Link-Robot-Artist/Media/RobotArmOutput.mp4" type="video/mp4">
+        </video>
+        <div class="c-body">
+          <h3>3-Link Robot Artist — Sliding-Mode Trajectory Tracking</h3>
+          <p>
+            A 3-DOF planar manipulator with fully symbolic Lagrangian dynamics tracks a cursive
+            handwriting trajectory under model uncertainty — steady-state error under 0.01 rad
+            with chattering eliminated via boundary-layer saturation.
+          </p>
+          <div class="p-links">
+            <a href="https://github.com/gustavotorr/Engineering-Portfolio/tree/main/3-Link-Robot-Artist" target="_blank" rel="noopener">Code &amp; docs</a>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <video autoplay loop muted playsinline preload="metadata" poster="Projectile-Motion-Simulation/Media/ImpactFrame.png">
+          <source src="Projectile-Motion-Simulation/Media/ProjectileSimulation.mp4" type="video/mp4">
+        </video>
+        <div class="c-body">
+          <h3>Rotating Link Projectile — Tip Impact Detection</h3>
+          <p>
+            A rigid rod launched with coupled linear and angular velocity: the simulation solves
+            which tip strikes the ground first, where it lands, and the complete kinematic state
+            at impact — a hybrid kinematics and root-finding problem.
+          </p>
+          <div class="p-links">
+            <a href="https://github.com/gustavotorr/Engineering-Portfolio/tree/main/Projectile-Motion-Simulation" target="_blank" rel="noopener">Code &amp; docs</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="hardware">
+  <div class="wrap">
+    <div class="section-label">03 — On the Bench</div>
+    <h2>Hardware build gallery</h2>
+    <p class="section-sub">The ball-and-beam rig: sensing, actuation, and the live-tuning interface.</p>
+    <div class="gallery">
+      <img src="ball-and-beam-pid/Media/Photos/ball%20%26%20beam%20pid%20robot.png" alt="Ball-and-beam PID robot overview" loading="lazy">
+      <img src="ball-and-beam-pid/Media/Photos/R0001879.jpg" alt="Ball-and-beam build detail" loading="lazy">
+      <img src="ball-and-beam-pid/Media/Photos/R0001884.jpg" alt="Ball-and-beam electronics" loading="lazy">
+      <img src="ball-and-beam-pid/Media/Photos/R0001885.jpg" alt="Ball-and-beam sensor mount" loading="lazy">
+      <img src="ball-and-beam-pid/Media/Photos/R0001886.jpg" alt="Ball-and-beam servo linkage" loading="lazy">
+      <img src="ball-and-beam-pid/Media/Photos/R0001889.JPG" alt="Ball-and-beam OLED interface" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <h2>Let's talk robotics.</h2>
+    <p>Open to conversations about control systems, robotics, and physical AI.</p>
+    <div class="hero-cta" style="justify-content:center;">
+      <a class="btn btn-primary" href="mailto:tgustavo21@gmail.com">tgustavo21@gmail.com</a>
+      <a class="btn btn-ghost" href="https://www.linkedin.com/in/gustavo-torres111/" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn btn-ghost" href="https://github.com/gustavotorr" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <div class="foot-note">© 2026 Gustavo Torres · Built from the <a href="https://github.com/gustavotorr/Engineering-Portfolio">Engineering-Portfolio</a> repository</div>
+  </div>
+</footer>
+
+</body>
+</html>
